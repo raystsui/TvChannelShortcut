@@ -110,6 +110,10 @@ void readTv() {
 
 void setChannelSharpTv(int chNum) {
   switch (chNum) {
+    case -116: sendSharpTv("VOLM16  "); break;  // Vol
+    case -118: sendSharpTv("VOLM18  "); break;  // Vol
+    case -121: sendSharpTv("VOLM21  "); break;  // Vol
+
     case -1: sendSharpTv("IAVD1   "); break;  // HDMI1
     case -2: sendSharpTv("IAVD2   "); break;  // HDMI2
     case 31: sendSharpTv("DTVD031 "); break;
@@ -166,8 +170,6 @@ void loop() {
       case 11: setChannelNowTv(209); setChannelSharpTv(-1); break;
       case 12: setChannelNowTv(211); setChannelSharpTv(-1); break;
       case 13: setChannelNowTv(213); setChannelSharpTv(-1); break;
-      case 16: sendSharpTv("WIDE1   "); break;
-      case 17: sendSharpTv("WIDE10  "); break;
       
       case 21: setChannelNowTv(332); setChannelSharpTv(-1); break;
       case 22: setChannelSharpTv(83); break;
@@ -180,11 +182,9 @@ void loop() {
       case 34: setChannelSharpTv(84); break;
       case 35: setChannelSharpTv(85); break;
 
-      case 17: 
-        Serial1.print("VOLM????"); Serial1.print((char)13); delay(50); readTv();
-        Serial1.print("VOLM????"); Serial1.print((char)13); delay(50); readTv();
-        Serial1.print("VOLM????"); Serial1.print((char)13); delay(50); readTv();
-      break;
+      case 17:setChannelSharpTv(-116); break;
+      case 27:setChannelSharpTv(-118); break;
+      case 37:setChannelSharpTv(-121); break;
     }
     delay(500);
     My_Receiver.resume();
