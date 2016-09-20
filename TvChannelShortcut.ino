@@ -42,8 +42,8 @@ const String IrChannelName[IrRemoteRows][IrRemoteCols] = {
   {"TLC","31","83"},
   {" ","99","84"},
   {" "," ","85"},
-  {" "," "," "},
-  {" "," "," "}
+  {"All Off","Chromecase"," "},
+  {"VOL16","VOL18","VOL21"}
 };
 
 /* NOW TV BOX CONTROL */
@@ -58,10 +58,12 @@ const String IrChannelName[IrRemoteRows][IrRemoteCols] = {
 #define NOWTV_NUM7 NEC,0x202E01F,32
 #define NOWTV_NUM8 NEC,0x20210EF,32
 #define NOWTV_NUM9 NEC,0x202906F,32
+#define NOWTV_PWR NEC,0x20250AF,32
+
 /* #define NOWTV_SPACER NEC,0XFFFFFFFF,0 */
 #define NOWTV_SPACER NEC,REPEAT,0
 
-enum IrRemoteDigits {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9};
+enum IrRemoteDigits {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9, PWR};
 
 void setChannelNowTv(int chNum) {
   switch(chNum) {
@@ -72,6 +74,7 @@ void setChannelNowTv(int chNum) {
     case 213: delay(500); sendDigitNowTv(N2); sendDigitNowTv(N1); sendDigitNowTv(N3); break;
     case 332: delay(500); sendDigitNowTv(N3); sendDigitNowTv(N3); sendDigitNowTv(N2); break;
     case 333: delay(500); sendDigitNowTv(N3); sendDigitNowTv(N3); sendDigitNowTv(N2); break;
+    case -999: delay(500); sendDigitNowTv(PWR); break; // Power button
   }
 }
 
@@ -87,7 +90,7 @@ void sendDigitNowTv(enum IrRemoteDigits dig) {
     case N7: My_Sender.send(NOWTV_SPACER); My_Sender.send(NOWTV_NUM7); delay(_DELAY_IR); My_Sender.send(NOWTV_SPACER); delay(_DELAY_IR); My_Receiver.enableIRIn(); break;
     case N8: My_Sender.send(NOWTV_SPACER); My_Sender.send(NOWTV_NUM8); delay(_DELAY_IR); My_Sender.send(NOWTV_SPACER); delay(_DELAY_IR); My_Receiver.enableIRIn(); break;
     case N9: My_Sender.send(NOWTV_SPACER); My_Sender.send(NOWTV_NUM9); delay(_DELAY_IR); My_Sender.send(NOWTV_SPACER); delay(_DELAY_IR); My_Receiver.enableIRIn(); break;
-
+    case PWR: My_Sender.send(NOWTV_SPACER); My_Sender.send(NOWTV_PWR); delay(_DELAY_IR); My_Sender.send(NOWTV_SPACER); delay(_DELAY_IR); My_Receiver.enableIRIn(); break;
   }
 }
 
@@ -110,10 +113,11 @@ void readTv() {
 
 void setChannelSharpTv(int chNum) {
   switch (chNum) {
+    case -999: sendSharpTv("POWR0   "); break; // TV & nowTV box all off
+    case -998: sendSharpTv("POWR1   "); break; // TV & nowTV box all on
     case -116: sendSharpTv("VOLM16  "); break;  // Vol
     case -118: sendSharpTv("VOLM18  "); break;  // Vol
     case -121: sendSharpTv("VOLM21  "); break;  // Vol
-
     case -1: sendSharpTv("IAVD1   "); break;  // HDMI1
     case -2: sendSharpTv("IAVD2   "); break;  // HDMI2
     case 31: sendSharpTv("DTVD031 "); break;
@@ -185,6 +189,11 @@ void loop() {
       case 17:setChannelSharpTv(-116); break;
       case 27:setChannelSharpTv(-118); break;
       case 37:setChannelSharpTv(-121); break;
+
+      case 15: setChannelNowTv(-999); setChannelSharpTv(-998); setChannelSharpTv(-998); setChannelSharpTv(-998); break;   // Turn all On
+      case 16: setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelNowTv(-999); break;   // Turn all Off
+
+      case 26: setChannelSharpTv(-2); break; // HDMI2 = Chromecast
     }
     delay(500);
     My_Receiver.resume();
