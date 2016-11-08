@@ -174,11 +174,14 @@ void loop() {
       case 11: setChannelNowTv(209); setChannelSharpTv(-1); break;
       case 12: setChannelNowTv(211); setChannelSharpTv(-1); break;
       case 13: setChannelNowTv(213); setChannelSharpTv(-1); break;
-      
+
+      case 15: setChannelNowTv(-999); setChannelSharpTv(-998); setChannelSharpTv(-998); setChannelSharpTv(-998); break;   // Turn all On
+      case 16: setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelNowTv(-999); break;   // Turn all Off
+
       case 21: setChannelNowTv(332); setChannelSharpTv(-1); break;
-      case 22: setChannelSharpTv(83); break;
-      case 23: setChannelSharpTv(31); break;
-      case 24: setChannelSharpTv(99); break;
+      case 22: setChannelSharpTv(31); break;
+      case 23: setChannelSharpTv(99); break;
+      case 24: setChannelSharpTv(-2); break; // HDMI2 = Chromecast
       
       case 31: setChannelSharpTv(81); break;
       case 32: setChannelSharpTv(82); break;
@@ -186,14 +189,11 @@ void loop() {
       case 34: setChannelSharpTv(84); break;
       case 35: setChannelSharpTv(85); break;
 
-      case 17:setChannelSharpTv(-116); break;
-      case 27:setChannelSharpTv(-118); break;
-      case 37:setChannelSharpTv(-121); break;
+      case 17:setChannelSharpTv(-116); break; // Vol16
+      case 27:setChannelSharpTv(-118); break; // Vol18
+      case 37:setChannelSharpTv(-121); break; // Vol21
 
-      case 15: setChannelNowTv(-999); setChannelSharpTv(-998); setChannelSharpTv(-998); setChannelSharpTv(-998); break;   // Turn all On
-      case 16: setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelNowTv(-999); break;   // Turn all Off
 
-      case 26: setChannelSharpTv(-2); break; // HDMI2 = Chromecast
     }
     delay(500);
     My_Receiver.resume();
