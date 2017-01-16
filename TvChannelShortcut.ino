@@ -1,5 +1,6 @@
-#include <IRLib.h>
+/* Platform: Arduino Micro */
 #include <avr/pgmspace.h>
+#include <IRLib.h>
 
 #define IR_RECV_PIN 11
 #define IR_TX_PIN 9
@@ -15,7 +16,7 @@ IRdecodeHash My_Hash_Decoder;
 
 int buttonCode = 0;
 
-/* Standard Arduino remote for hobbist             */
+/* IR Code as read for Standard Arduino remote for hobbist */
 const unsigned long IrHashValue[IrRemoteRows][IrRemoteCols] = {
   {0xE318261B, 0x511DBB, 0xEE886D7F},
   {0x52A3D41F, 0xD7E84B1B, 0x20FE4DBB},
@@ -37,13 +38,13 @@ const int IrButtonCode[IrRemoteRows][IrRemoteCols] = {
 };
 
 const String IrChannelName[IrRemoteRows][IrRemoteCols] = {
-  {"Discovery","332","81"},
-  {"SCI","83","82"},
-  {"TLC","31","83"},
-  {" ","99","84"},
-  {" "," ","85"},
-  {"All Off","Chromecase"," "},
-  {"VOL16","VOL18","VOL21"}
+  {"Discovery", "Now News",   "TVB"},
+  {"SCI",       "RTHK31",     "TVB News"},
+  {"NatGeo",    "ViuTV",      "Pearl"},
+  {"BBC Earth", "TLC",        "Now Popcorn"},
+  {"All On",    " ",          "SatTV Movie"},
+  {"All Off",   "Chromecast", "SatTV Classic"},
+  {"VOL14",     "VOL17",      "VOL21"}
 };
 
 /* NOW TV BOX CONTROL */
@@ -115,7 +116,9 @@ void setChannelSharpTv(int chNum) {
   switch (chNum) {
     case -999: sendSharpTv("POWR0   "); break; // TV & nowTV box all off
     case -998: sendSharpTv("POWR1   "); break; // TV & nowTV box all on
+    case -114: sendSharpTv("VOLM14  "); break;  // Vol
     case -116: sendSharpTv("VOLM16  "); break;  // Vol
+    case -117: sendSharpTv("VOLM17  "); break;  // Vol
     case -118: sendSharpTv("VOLM18  "); break;  // Vol
     case -121: sendSharpTv("VOLM21  "); break;  // Vol
     case -1: sendSharpTv("IAVD1   "); break;  // HDMI1
@@ -173,27 +176,27 @@ void loop() {
     switch(buttonCode) {
       case 11: setChannelNowTv(209); setChannelSharpTv(-1); break;
       case 12: setChannelNowTv(211); setChannelSharpTv(-1); break;
-      case 13: setChannelNowTv(213); setChannelSharpTv(-1); break;
-
+      case 13: setChannelNowTv(215); setChannelSharpTv(-1); break;
+      case 14: setChannelNowTv(220); setChannelSharpTv(-1); break;
       case 15: setChannelNowTv(-999); setChannelSharpTv(-998); setChannelSharpTv(-998); setChannelSharpTv(-998); break;   // Turn all On
       case 16: setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelSharpTv(-999); setChannelNowTv(-999); break;   // Turn all Off
 
       case 21: setChannelNowTv(332); setChannelSharpTv(-1); break;
       case 22: setChannelSharpTv(31); break;
       case 23: setChannelSharpTv(99); break;
-      case 24: setChannelSharpTv(-2); break; // HDMI2 = Chromecast
+      case 24: setChannelNowTv(223); setChannelSharpTv(-1); break;
+      case 26: setChannelSharpTv(-2); break; // HDMI2 = Chromecast
       
       case 31: setChannelSharpTv(81); break;
-      case 32: setChannelSharpTv(82); break;
-      case 33: setChannelSharpTv(83); break;
-      case 34: setChannelSharpTv(84); break;
-      case 35: setChannelSharpTv(85); break;
+      case 32: setChannelSharpTv(83); break;
+      case 33: setChannelSharpTv(84); break;
+      case 34: setChannelNowTv(133); setChannelSharpTv(-1); break;
+      case 35: setChannelNowTv(139); setChannelSharpTv(-1); break;
+      case 36: setChannelNowTv(140); setChannelSharpTv(-1); break;
 
-      case 17:setChannelSharpTv(-116); break; // Vol16
-      case 27:setChannelSharpTv(-118); break; // Vol18
+      case 17:setChannelSharpTv(-114); break; // Vol16
+      case 27:setChannelSharpTv(-117); break; // Vol18
       case 37:setChannelSharpTv(-121); break; // Vol21
-
-
     }
     delay(500);
     My_Receiver.resume();
